@@ -66,7 +66,10 @@ Deploy to Github Pages
 bundle exec middleman deploy
 ```
 
-Or install the [Proteus gem](https://github.com/thoughtbot/proteus) and enjoy some shortcuts.
+Build a PDF
+```
+bundle exec middleman build -e pdf
+```
 
 ## Directories
 
