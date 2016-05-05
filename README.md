@@ -1,5 +1,12 @@
 # Middleman Book Template
 
+- [About](#about)
+- [Included Libraries](#included-libraries)
+- [Getting Started](#getting-started)
+- [Useful Commands](#useful-commands)
+- [Project Structure](#project-structure)
+- [Content Authoring](#content-authoring)
+
 ## About
 
 This is a project template for the
