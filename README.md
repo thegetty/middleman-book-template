@@ -36,13 +36,20 @@ Pages.
 
 ## Getting Started
 
-Set up your project in your code directory
+This project is designed for use as a [Middleman template](https://middlemanapp.com/advanced/project_templates/).
+To get started, first make sure you have recent versions of Ruby and Middleman installed.
+
+Then create a new project by running this command:
 ```
-git clone https://github.com/thoughtbot/proteus-middleman.git your-project-folder
-cd your-project-folder
-git remote rm origin
-git remote add origin your-git-url
+middleman init my_book --template=gettypubs/middleman-book-template
 ```
+This will create a `my_book` directory inside the current folder that contains everything you need to get started.
+
+### Recommended
+
+Consider adding this project to version control by running `git init` inside this folder after initializing.
+
+## Useful Commands
 
 Install dependencies:
 ```
@@ -65,13 +72,3 @@ Or install the [Proteus gem](https://github.com/thoughtbot/proteus) and enjoy so
 
 Stylesheets, fonts, images, and JavaScript files go in the `/source/assets/` directory.
 Vendor stylesheets and JavaScripts should go in each of their `/vendor/` directories.
-
-## Credits
-
-[![thoughtbot](http://images.thoughtbot.com/bourbon/thoughtbot-logo.svg)](http://thoughtbot.com)
-
-thoughtbot Middleman Starter is maintained and funded by [thoughtbot, inc](http://thoughtbot.com). Thank you to all of [the contributors](https://github.com/thoughtbot/proteus-middleman/contributors)!
-
-## License
-
-Copyright © 2014–2015 [thoughtbot, inc](http://thoughtbot.com). thoughtbot Middleman Starter is free software, and may be redistributed under the terms specified in the [license](https://github.com/thoughtbot/bourbon/blob/master/LICENSE.md).
