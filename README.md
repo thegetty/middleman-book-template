@@ -39,6 +39,26 @@ Pages.
 This project is designed for use as a [Middleman template](https://middlemanapp.com/advanced/project_templates/).
 To get started, first make sure you have recent versions of Ruby and Middleman installed.
 
+### Setup on OSX
+
+For best results, we recommend that you have a ruby development environment set up on your machine.
+Assuming you are using a mac, [Thoughtbot's Laptop Script](https://github.com/thoughtbot/laptop) is
+an excellent place to start. Using this script removes the need to do any of the steps below.
+
+If you plan to set up manually, install the following tools (in this order):
+
+- Xcode Command-line tools (`xcode-select --install`), or all of Xcode if
+  running on Mac OSX 10.8 or lower
+- [Homebrew package manager](http://brew.sh)
+  `ruby -e "$(curl -fsSL https://raw.githubusercontent.com/Homebrew/install/master/install)"`
+- [Rbenv](https://github.com/rbenv/rbenv) and ruby-build to manage different versions of Ruby  
+  `brew install rbenv ruby-build`  
+  After install, run `rbenv init` to setup
+- Ruby 2.3.1: `rbenv install 2.3.1` (may take some time)
+- Use this version of ruby everywhere with `rbenv global 2.3.1`
+- Finally, run `gem install bundler` to install Ruby's Bundler tool. This tool
+  will install the remaining dependencies automatically.
+
 Then create a new project by running this command:
 ```
 middleman init my_book --template=gettypubs/middleman-book-template
