@@ -58,6 +58,8 @@ If you plan to set up manually, install the following tools (in this order):
 - Use this version of ruby everywhere with `rbenv global 2.3.1`
 - Finally, run `gem install bundler` to install Ruby's Bundler tool. This tool
   will install the remaining dependencies automatically.
+  
+### Create a new Project
 
 Then create a new project by running this command:
 ```
@@ -65,7 +67,7 @@ middleman init my_book --template=gettypubs/middleman-book-template
 ```
 This will create a `my_book` directory inside the current folder that contains everything you need to get started.
 
-### Recommended
+#### Recommended
 
 Consider adding this project to version control by running `git init` inside this folder after initializing.
 
