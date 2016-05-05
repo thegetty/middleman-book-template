@@ -1,0 +1,138 @@
+$sliding-panel-position: "left";        // "left" or "right"
+$sliding-panel-width: 20rem;
+$sliding-panel-z-index: 99999;
+$sliding-panel-border-color: $dark-gray;
+$sliding-panel-background: shade($blue, 25%);
+$sliding-panel-color: #fff;
+$sliding-panel-border: 1px solid $sliding-panel-border-color;
+$sliding-panel-color-hover: #fff;
+$sliding-panel-background-focus: lighten($sliding-panel-background, 5%);
+$sliding-panel-fade-screen-bg: #000;
+
+.nav-sidebar {
+  @include position(fixed, 0 auto 0 0);
+  @include size(100% 100%);
+  @include transform(translateX(-100%));
+  @include transition(all 0.1s ease-in-out);
+  @include link-color($sliding-panel-color);
+
+  background-color: $sliding-panel-background;
+  color: $sliding-panel-color;
+  font-family: $heading-font-family;
+  -webkit-overflow-scrolling: touch;
+  overflow-y: auto;
+  padding: 1rem;
+  z-index: $sliding-panel-z-index;
+
+  @include media($medium-screen-up) {
+    @include display(flex);
+    @include flex-direction(column);
+    @include justify-content(center);
+    // Right oriented by default
+    @if $sliding-panel-position == "left" {
+      @include transform(translateX(-$sliding-panel-width));
+    } @else {
+      @include position(fixed, 0 0 0 auto);
+      @include transform(translateX($sliding-panel-width));
+    }
+    @include size($sliding-panel-width 100%);
+  }
+
+  &.visible {
+    @include transform(translateX(0));
+  }
+}
+
+.nav-sidebar-close {
+  font-size: 1.5em;
+  position: absolute;
+  top: 0.9rem;
+  right: 1.6rem;
+
+  @include media($medium-screen-up) {
+    display: none;
+  }
+}
+
+.nav-sidebar-inner {
+  @include flex(0 1 auto);
+  -webkit-overflow-scrolling: touch;
+  overflow-y: auto;
+}
+
+.nav-sidebar-header {
+  margin-top: 2em;
+
+  @include media($medium-screen-up) {
+    margin-top: 0;
+  }
+}
+
+.nav-sidebar-title {
+  font-size: 1.25rem;
+  margin-right: 3rem;
+
+  @include media($medium-screen-up) {
+    font-size: 1.5rem;
+  }
+}
+
+.nav-sidebar-author {
+  color: darken($sliding-panel-color, 20%);
+  font-size: 1.125rem;
+
+  @include media($medium-screen-up) {
+    font-size: 1.25rem;
+  }
+}
+
+.nav-sidebar-toc {
+  margin: $base-spacing 0;
+
+  li { margin-bottom: 0.5rem; }
+}
+
+.nav-sidebar-toc-section {
+  border-bottom: solid 1px transparentize($sliding-panel-color, 0.75);
+}
+
+.nav-sidebar-downloads,
+.nav-sidebar-cite {
+  h4 {
+    font-size: 1rem;
+  }
+}
+
+.nav-cite,
+.nav-downloads {
+  background-color: $dark-gray;
+  font-size: 0.85em;
+  padding: $small-spacing;
+}
+
+.nav-sidebar-footer {
+  font-size: 0.8125em;
+}
+
+.nav-logo {
+  margin: 1rem auto;
+  width: 2.5rem;
+
+  @include media($medium-screen-up) {
+    width: 4.5rem;
+  }
+}
+
+.sliding-panel-fade-screen {
+  @include position(fixed, 0 0 0 0);
+  @include transition;
+  background: $sliding-panel-fade-screen-bg;
+  opacity: 0;
+  visibility: hidden;
+  z-index: ($sliding-panel-z-index - 1);
+
+  &.visible {
+    opacity: 0.4;
+    visibility: visible;
+  }
+}

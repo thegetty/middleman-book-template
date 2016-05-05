@@ -1,0 +1,33 @@
+// Utility Classes
+// -----------------------------------------------------------------------------
+.ctr {
+  text-align: center;
+}
+
+.smcaps {
+  @include font-feature-settings("c2sc", "smcp", "kern");
+  font-variant: all-small-caps;
+}
+
+.mobile-hide {
+  @include media($small-screen) { display: none; }
+}
+
+.force-wrap {
+  @include prefixer(hyphens, auto, webkit moz ms spec);
+  overflow-wrap: break-word;
+  // word-break: break-all;
+  -ms-word-break: break-all;
+  word-break: break-word;
+  word-wrap: break-word;
+}
+
+// Global styles
+// -----------------------------------------------------------------------------
+html { min-height: 100vh; }
+
+.container {
+  @include outer-container;
+  padding: 0 $small-spacing;
+  @include media($large-screen-up) { padding: 0; }
+}

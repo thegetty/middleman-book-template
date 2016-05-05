@@ -1,0 +1,23 @@
+---
+title:
+  main: Getty Publication Template
+  short: Pub Template
+pub_date: 2016-05-05
+creator:
+  name: J. Paul Getty
+  role: aut
+  file_as: Getty, J. Paul
+contributors:
+  - name: Eric Gardner
+    role: aut
+    file_as: Gardner, Eric
+publisher: Getty Publications
+publisher_location: Los Angeles
+description: >-
+  A digital book template from Getty Publications.
+subjects:
+  - subject__ebooks
+rights: >-
+  © 2016 J. Paul Getty Trust
+languages:
+  - en-US

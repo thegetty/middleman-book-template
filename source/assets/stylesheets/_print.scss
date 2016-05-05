@@ -1,0 +1,125 @@
+// Variables
+// -----------------------------------------------------------------------------
+$page-width: 8.5in;
+$page-height: 11in;
+
+$bleed: 0;
+// $bleed: 0.125in;
+
+$bleed-height: (($bleed * 2) + $page-height);
+$bleed-width: (($bleed * 2) + $page-width);
+
+$bottom-margin: 1in;
+$top-margin: 0.875in;
+$inner-margin: 1in;
+$outer-margin: 0.75in;
+
+$inner-width: $page-width - ($inner-margin + $outer-margin);
+$inner-height: $page-height - ($top-margin + $bottom-margin);
+
+$print-base-font-size: 9.5pt;
+$print-base-spacing: 0.125in;
+$print-base-line-height: 1.3;
+$print-paragraph-indent: 0.25in;
+
+$print-background-color: #fff;
+$print-text-color: #000;
+
+$page-number-size: 7.5pt;
+$footnote-size: 7.5pt;
+
+$medium-gray: transparentize($print-text-color, 0.5);
+$light-gray: transparentize($print-text-color, 0.5);
+
+// Default page setup
+// -----------------------------------------------------------------------------
+// scss-lint:disable PropertySpelling
+// @prince-pdf { prince-pdf-page-layout: two-column-right; }
+
+@page {
+  size: $page-width $page-height;
+  bleed: $bleed;
+  // prince-trim: 0.25in;
+  // marks: crop;
+}
+
+@page:left {
+  margin-bottom: $bottom-margin;
+  margin-left: $outer-margin;
+  margin-right: $inner-margin;
+  margin-top: $top-margin;
+
+  @bottom-left {
+    //content: counter(page) "\2003" string(doctitle);
+    content: counter(page);
+    font-family: $base-font-family;
+    font-size: $page-number-size;
+  }
+}
+
+@page:right {
+  margin-bottom: $bottom-margin;
+  margin-left: $inner-margin;
+  margin-right: $outer-margin;
+  margin-top: $top-margin;
+
+  @bottom-right {
+    content: counter(page);
+    font-family: $base-font-family;
+    font-size: $page-number-size;
+  }
+}
+
+@page bleed {
+  margin: 0;
+  @bottom-left { content: none; }
+  @bottom-right { content: none; }
+}
+
+@page frontmatter:left {
+  margin-bottom: $bottom-margin;
+  margin-left: $outer-margin;
+  margin-right: $inner-margin;
+  margin-top: $top-margin;
+  @bottom-left { content: counter(page, lower-roman); }
+}
+
+@page frontmatter:right {
+  margin-bottom: $bottom-margin;
+  margin-left: $inner-margin;
+  margin-right: $outer-margin;
+  margin-top: $top-margin;
+  @bottom-right { content: counter(page, lower-roman); }
+}
+
+@page no-footer:left {
+  margin-bottom: $bottom-margin;
+  margin-left: $outer-margin;
+  margin-right: $inner-margin;
+  margin-top: $top-margin;
+  @bottom-left { content: none; }
+  @bottom-right { content: none; }
+}
+
+@page no-footer:right {
+  margin-bottom: $bottom-margin;
+  margin-left: $inner-margin;
+  margin-right: $outer-margin;
+  margin-top: $top-margin;
+  @bottom-left { content: none; }
+  @bottom-right { content: none; }
+}
+
+// scss-lint:enable PropertySpelling
+
+// Print Styles
+// -----------------------------------------------------------------------------
+@media print {
+  // remove unneeded elements
+  .nav-sidebar,
+  .navbar,
+  .search-results,
+  .sliding-panel-fade-screen {
+    display: none;
+  }
+}

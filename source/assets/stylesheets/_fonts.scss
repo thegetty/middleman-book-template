@@ -1,0 +1,22 @@
+// Font Declarations
+// -----------------------------------------------------------------------------
+// Add additional web fonts here as needed
+// Uncomment only fonts that you intend to use to save on bandwidth
+// See the assets/fonts directory for more available weights and faces
+
+// Merriweather (Body text / serif)
+@include font-face("Merriweather", "../fonts/merriweather-light", 300);
+@include font-face("Merriweather", "../fonts/merriweather-lightitalic", 300, italic);
+@include font-face("Merriweather", "../fonts/merriweather-regular", 400);
+@include font-face("Merriweather", "../fonts/merriweather-italic", 400, italic);
+@include font-face("Merriweather", "../fonts/merriweather-bold", 700);
+@include font-face("Merriweather", "../fonts/merriweather-bolditalic", 700, italic);
+
+// Lato (headings / sans-serif)
+@include font-face("Lato", "../fonts/Lato-Light", 300);
+@include font-face("Lato", "../fonts/Lato-LightItalic", 300, italic);
+@include font-face("Lato", "../fonts/Lato-Regular", 400);
+@include font-face("Lato", "../fonts/Lato-RegularItalic", 400, italic);
+@include font-face("Lato", "../fonts/Lato-Bold", 700);
+@include font-face("Lato", "../fonts/Lato-BoldItalic", 700, italic);
+

@@ -1,0 +1,12 @@
+@mixin link-color ($base-color) {
+  a {
+    color: $base-color;
+
+    &:active,
+    &:focus,
+    &:hover {
+      color: transparentize($base-color, 0.65);
+    }
+  }
+}
+

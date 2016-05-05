@@ -1,0 +1,57 @@
+// Global page styles
+// -----------------------------------------------------------------------------
+%page-layout {
+  @include media($medium-screen-up) {@include span-columns(10); @include shift(1);}
+  @include media($large-screen-up) {@include span-columns(8); @include shift(2);}
+}
+
+.page {
+  @extend .container;
+  margin-bottom: $base-spacing * 2;
+}
+
+// Page Header
+// -----------------------------------------------------------------------------
+.page-cover {
+  @include display(flex);
+  @include flex-direction(column);
+  @include justify-content(center);
+
+  background-color: tint($light-gray, 30%);
+  background-position: center top;
+  background-size: cover;
+  height: 200px;
+  margin-bottom: $base-spacing;
+  margin-top: $navbar-height;
+  padding: $small-spacing;
+
+  @include media($medium-screen-up) { height: 300px; }
+  @include media($large-screen-up) { height: 350px; }
+
+  .page-title,
+  .page-author {
+    text-align: center;
+  }
+}
+
+.page-header,
+.page-content {
+  @extend %page-layout;
+}
+
+.page-header {
+  margin-bottom: $small-spacing;
+  margin-top: em($navbar-height) + $base-spacing;
+}
+
+.page-title {
+  margin-bottom: 0;
+}
+
+.page-author {
+  color: $medium-gray;
+  font-size: 1.5em;
+  font-weight: normal;
+  /* margin-bottom: $base-spacing; */
+  margin-top: 0.25rem;
+}

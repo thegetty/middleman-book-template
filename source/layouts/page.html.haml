@@ -1,0 +1,8 @@
+= wrap_layout :application do
+  %header.page-cover
+    %h1.page-title= current_page.data.title
+    - if current_page.data.author
+      %h3.page-author= current_page.data.author
+  %article.page
+    %main.page-content
+      = yield

@@ -1,0 +1,93 @@
+$navbar-bg-color: shade($action-color, 15%);
+$navbar-text-color: #fff;
+$navbar-border: solid 1px tint($navbar-bg-color, 15%);
+$navbar-icon-size: 24px;
+$navbar-z-index: 9999;
+
+.navbar {
+  @include display(flex);
+  @include flex-direction(row);
+  @include flex-wrap(nowrap);
+  @include justify-content(space-between);
+  @include link-color($navbar-text-color);
+
+  background-color: $navbar-bg-color;
+  color: $navbar-text-color;
+  font-family: $heading-font-family;
+  font-weight: normal;
+  height: $navbar-height;
+  line-height: $navbar-height;
+  position: fixed;
+  top: 0;
+  width: 100%;
+  z-index: $navbar-z-index;
+}
+
+// Top-level units
+.navbar-left,
+.navbar-right {
+  @include flex(3);
+}
+
+.navbar-left {
+  background-image: url(image-path("getty_logo.svg"));
+  background-repeat: no-repeat;
+  background-position: center left;
+  opacity: 0.5;
+  padding-left: $base-spacing;
+}
+
+.navbar-right {
+  padding-right: $small-spacing;
+  text-align: right;
+}
+
+.navbar-center {
+  @include display(flex);
+  @include flex(1 0 auto);
+  @include justify-content(center);
+  text-align: center;
+}
+
+// Inside center unit
+.navbar-center-info {
+  margin: 0 $base-spacing;
+  text-align: center;
+}
+
+.navbar-next-link,
+.navbar-prev-link {
+  @extend .mobile-hide;
+  font-size: $navbar-icon-size * 0.75;
+}
+
+.navbar-prev-link {
+  @extend .ion-chevron-left;
+}
+
+.navbar-next-link {
+  @extend .ion-chevron-right;
+}
+
+// Inside navbar-center-info
+.navbar-breadcrumb {
+  @extend .ion-android-arrow-dropright;
+  @extend .mobile-hide;
+  margin: 0 $small-spacing;
+}
+
+.navbar-page-title {
+  @extend .mobile-hide;
+}
+
+// Inside left unit
+.navbar-search-icon {
+  @extend .ion-search;
+  font-size: $navbar-icon-size;
+}
+
+// Inside right unit
+.navbar-menu-icon {
+  @extend .ion-navicon;
+  font-size: $navbar-icon-size * 1.5;
+}

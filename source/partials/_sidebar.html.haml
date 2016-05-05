@@ -1,0 +1,9 @@
+.nav-sidebar-inner
+  %header.nav-sidebar-header.nav-sidebar-toc-section
+    %h2.nav-sidebar-title= title
+    %a.nav-sidebar-close{:href => "javascript:void(0)", :id => "nav-menu-close"}
+      %i.ion-android-close
+    %nav-sidebar-content
+      %ul.nav-sidebar-toc
+        - chapters.each do |chapter|
+          %li= link_to chapter.title, chapter
