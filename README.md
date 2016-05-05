@@ -55,8 +55,8 @@ this order):
 - [Homebrew package manager](http://brew.sh)
   `ruby -e "$(curl -fsSL https://raw.githubusercontent.com/Homebrew/install/master/install)"`
 - [Rbenv](https://github.com/rbenv/rbenv) and ruby-build to manage different versions of Ruby  
+  After install, run `rbenv init` to setup  
   `brew install rbenv ruby-build`  
-  After install, run `rbenv init` to setup
 - Ruby 2.3.1: `rbenv install 2.3.1` (may take some time)
 - Use this version of ruby everywhere with `rbenv global 2.3.1`
 - Finally, run `gem install bundler` to install Ruby's Bundler tool. This tool
