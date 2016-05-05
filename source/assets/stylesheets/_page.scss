@@ -10,6 +10,12 @@
   margin-bottom: $base-spacing * 2;
 }
 
+.page-header,
+.page-content {
+  @extend %page-layout;
+}
+
+
 // Page Header
 // -----------------------------------------------------------------------------
 .page-cover {
@@ -34,11 +40,6 @@
   }
 }
 
-.page-header,
-.page-content {
-  @extend %page-layout;
-}
-
 .page-header {
   margin-bottom: $small-spacing;
   margin-top: em($navbar-height) + $base-spacing;
@@ -52,6 +53,12 @@
   color: $medium-gray;
   font-size: 1.5em;
   font-weight: normal;
-  /* margin-bottom: $base-spacing; */
   margin-top: 0.25rem;
+}
+
+
+// Page Content
+// -----------------------------------------------------------------------------
+.page-content {
+  @extend %body-text;
 }

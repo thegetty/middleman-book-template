@@ -31,3 +31,22 @@ html { min-height: 100vh; }
   padding: 0 $small-spacing;
   @include media($large-screen-up) { padding: 0; }
 }
+
+%body-text {
+
+  h1,
+  h2,
+  h3,
+  h4,
+  h5,
+  h6 {
+    font-weight: 400;
+    letter-spacing: -0.5px;
+    margin-bottom: 1em;
+    margin-top: 1em;
+  }
+
+  @include text-size(1.0675);
+  @include media($medium-screen-up) { @include text-size(1.125); }
+  @include media($large-screen-up) { @include text-size(1.25); }
+}

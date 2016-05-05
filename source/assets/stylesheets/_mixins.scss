@@ -10,3 +10,11 @@
   }
 }
 
+@mixin text-size($multiplier) {
+  p,
+  ol,
+  ul {
+    font-size: $base-font-size * $multiplier;
+  }
+}
+
