@@ -47,6 +47,6 @@ html { min-height: 100vh; }
   }
 
   @include text-size(1.0675);
-  @include media($medium-screen-up) { @include text-size(1.125); }
-  @include media($large-screen-up) { @include text-size(1.25); }
+  @include media($medium-screen-up) { @include text-size(1.2); }
+  @include media($large-screen-up) { @include text-size(1.3); }
 }
