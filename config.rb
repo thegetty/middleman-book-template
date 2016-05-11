@@ -1,5 +1,6 @@
 require "extensions/book"
 
+activate :sprockets
 activate :directory_indexes
 activate :autoprefixer
 activate :book
@@ -11,9 +12,12 @@ set :images_dir, "assets/images"
 set :fonts_dir, "assets/fonts"
 set :layout, "layouts/application"
 
+set :markdown, :smartypants => true, :footnotes => :true
+
 page "/*.xml", layout: false
 page "/*.json", layout: false
 page "/*.txt", layout: false
+
 
 configure :development do
   activate :livereload
