@@ -1,23 +1,19 @@
 ---
 title:
-  main: Getty Publication Template
-  short: Pub Template
+  main: "Alice's Adventures in Wonderland"
+  short: "Alice in Wonderland"
 pub_date: 2016-05-05
 creator:
-  name: J. Paul Getty
-  role: aut
-  file_as: Getty, J. Paul
-contributors:
-  - name: Eric Gardner
+  - name: Lewis Caroll
     role: aut
-    file_as: Gardner, Eric
-publisher: Getty Publications
-publisher_location: Los Angeles
-description: >-
-  A digital book template from Getty Publications.
+    file_as: Caroll, Lewis
+publisher: Project Gutenberg
+description: >
+  Alice\'s Aventures in Wonderland, by Lewis Caroll
 subjects:
   - subject__ebooks
 rights: >-
   © 2016 J. Paul Getty Trust
 languages:
-  - en-US
+  - en
+pub_id: Test ebook
