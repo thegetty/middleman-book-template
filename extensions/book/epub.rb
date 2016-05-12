@@ -23,12 +23,15 @@ module Book
       build_opf
     end
 
+    # Load a template from the book/templates directory
+    # Returns a Haml::Engine object ready to render
     def load_template(file)
       path = "extensions/book/templates/" + file
       Haml::Engine.new(File.read(path), :format => :xhtml)
     end
 
-    # Ensure a clean workspace
+    private
+
     def clean_directory(dirname)
       valid_start_chars = /[A-z]/
       valid_start_chars.freeze
@@ -37,7 +40,6 @@ module Book
       Dir.mkdir(dirname)
     end
 
-    # Build out the EPUB directory structure for later zipping
     def build_epub_dir
       oebps_subdirs = %w(assets assets/images assets/stylesheets assets/fonts)
       # TODO: Make sure to deal with mimetype file here
@@ -50,8 +52,8 @@ module Book
       end
     end
 
-    # Use Middleman's sitemap to get a set of image resources
-    # Then copy them to the appropriate location
+    # Copy image resources from the Middleman sitemap into the epub package
+    # and add their information to the parent Book object's @manifest
     def copy_images(sitemap)
       resources = sitemap.resources
       images = resources.select { |r| r.path.match("assets/images/*") }
@@ -67,12 +69,6 @@ module Book
         end
       end
     end
-
-    # def copy_boilerplate_files
-    #   FileUtils.cp("extensions/book/templates/mimetype", "dist/epub/mimetype")
-    #   FileUtils.cp("extensions/book/templates/container.xml", "dist/epub/META-INF/container.xml")
-    # end
-    private
 
     def build_chapters
       Dir.chdir(output_path + "OEBPS/") do
