@@ -1,0 +1,23 @@
+!!! XML
+%package{ :xmlns => "http://www.idpf.org/2007/opf",
+          :version => "3.0",
+          "xml:lang" => "en",
+          "unique-identifier" => "pub-id" }
+  %metadata{"xmlns:dc" => "http://purl.org/dc/elements/1.1/"}
+    %dc:title#title= book.info.title.main
+    %meta{:property => "title-type", :refines => "#title"} main
+    %dc:creator#creator= book.info.creator.first.name
+    %meta{:property => "file-as", :refines => "#creator"}= book.info.creator.first.file_as
+    %meta{:property => "role", :refines => "#creator", :scheme => "marc:relators"} aut
+    %dc:identifier#pub-id= book.info.pub_id
+    %dc:language= book.info.languages.first
+    %dc:rights= book.info.rights
+    %meta{:property => "dcterms:modified"} 2014-09-04T10:47:00Z
+  %manifest
+    - book.manifest.each do |item|
+      %item{ :id => item[:id],
+             :href => item[:href],
+             "media-type" => item[:media_type] }/
+  %spine
+    - book.chapters.each do |chapter|
+      %itemref= chapter.title

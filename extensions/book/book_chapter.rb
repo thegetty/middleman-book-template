@@ -1,14 +1,23 @@
 module Book
   class Chapter < Middleman::Sitemap::Resource
-    attr_reader :book, :title, :author, :rank
+    attr_reader :book
 
     # Pass in a reference to the parent Book extension for later use
     def initialize(store, path, source, book)
       super(store, path, source)
       @book   = book
-      @title  = data.title
-      @author = data.author || @book.author
-      @rank   = data.sort_order
+    end
+
+    def title
+      data.title
+    end
+
+    def author
+      data.author || @book.author
+    end
+
+    def rank
+      data.sort_order
     end
 
     def body

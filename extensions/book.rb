@@ -1,27 +1,33 @@
 require_relative "book/helpers.rb"
 require_relative "book/book_chapter.rb"
+require_relative "book/epub.rb"
 
 module Book
   class BookExtension < Middleman::Extension
     self.defined_helpers = [Book::Helpers]
 
     option :pdf_output_path, "dist/book.pdf", "Where to write generated PDF"
+    option :epub_output_path, "dist/epub/", "Where to write generated EPUB files"
     option :prince_cli_flags, "--no-artificial-fonts", "Flags for Prince cli"
 
     expose_to_template :chapters, :title, :author
     expose_to_application :chapters
 
-    attr_reader :chapters
-    attr_reader :info
+    attr_reader :chapters, :title, :author, :info
+    attr_accessor :manifest
 
     def initialize(app, options_hash = {}, &block)
       super
       @info     = @app.data.book
+      @title    = info.title.main
+      @author   = info.author_as_it_appears
       @chapters = []
+      @manifest = []
 
       app.after_build do |builder|
         book = app.extensions[:book]
         book.generate_pdf if environment? :pdf
+        book.generate_epub if environment? :epub
       end
     end
 
@@ -30,12 +36,9 @@ module Book
       resources
     end
 
-    def author
-      info.author_as_it_appears
-    end
-
-    def title
-      info.title.main
+    def generate_epub
+      epub = Epub.new(self, chapters, options.epub_output_path)
+      epub.build(app.sitemap)
     end
 
     def generate_pdf
