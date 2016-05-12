@@ -1,6 +1,7 @@
 require_relative "book/helpers.rb"
 require_relative "book/book_chapter.rb"
 require_relative "book/epub.rb"
+require "time"
 
 module Book
   class BookExtension < Middleman::Extension
@@ -23,6 +24,7 @@ module Book
       @author   = info.author_as_it_appears
       @chapters = []
       @manifest = []
+      @modified = Time.now
 
       app.after_build do |builder|
         book = app.extensions[:book]
