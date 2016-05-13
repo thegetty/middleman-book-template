@@ -19,6 +19,8 @@ module Book
     def build(sitemap)
       build_epub_dir
       copy_images(sitemap)
+      build_mimetype
+      build_container
       build_chapters
       build_opf
     end
@@ -42,7 +44,6 @@ module Book
 
     def build_epub_dir
       oebps_subdirs = %w(assets assets/images assets/stylesheets assets/fonts)
-      # TODO: Make sure to deal with mimetype file here
       Dir.chdir(output_path) do
         FileUtils.rm_rf(".")
         ["META-INF", "OEBPS"].each { |dir| clean_directory(dir) }
@@ -70,12 +71,36 @@ module Book
       end
     end
 
+    # Various Build Methods
+    # These methods write one or more files at a specific location
+
+    def build_mimetype
+      Dir.chdir(output_path) do
+        File.open("mimetype", "w") { |f| f.puts "application/epub+zip" }
+      end
+    end
+
+    def build_container
+      template = load_template("container.xml.haml")
+      Dir.chdir(output_path + "META-INF/") do
+        File.open("container.xml", "w") { |f| f.puts template.render }
+      end
+    end
+
     def build_chapters
       Dir.chdir(output_path + "OEBPS/") do
         chapters.each do |c|
           File.open("#{c.title.slugify}.html", "w") { |f| f.puts c.format_for_epub }
         end
       end
+    end
+
+    def build_toc_ncx
+      # TODO: Build the TOC NCX file from a HAML template
+    end
+
+    def build_toc_nav
+      # TODO: Build the TOC nav file from a HAML template
     end
 
     def build_opf
