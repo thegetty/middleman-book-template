@@ -7,6 +7,15 @@ module Book
   class Epub
     attr_reader :book, :chapters, :template_path, :output_path, :metadata
 
+    ItemTag = Struct.new :id, :href, :media_type, :properties do
+      def initialize(*)
+        super
+        self.properties ||= nil
+      end
+    end
+
+    NavPoint = Struct.new :id, :play_order, :src, :text
+
     # Pass in an array of chapter objects on initialization
     # Pass in a reference to the parent Book extension that created the epub object
     def initialize(book, chapters, output_path)
@@ -67,12 +76,12 @@ module Book
       Dir.chdir(output_path + "OEBPS/assets/images") do
         images.each_with_index do |image, index|
           filename = image.file_descriptor.relative_path.basename
-          item = { :href => image.file_descriptor.relative_path,
-                   :id => "img_#{index}",
-                   :media_type => image.content_type }
+          item = ItemTag.new("img_#{index}",
+                             image.file_descriptor.relative_path,
+                             image.content_type)
 
           if image.file_descriptor.relative_path.basename.to_s == book.cover
-            item[:properties] = "cover-image"
+            item.properties = "cover-image"
           end
 
           File.open(filename, "w") { |f| f.puts image.render }
@@ -101,28 +110,21 @@ module Book
     def build_cover_page
       return false unless book.cover
       build_page_from_template("cover.xhtml")
-
-      item = { :id => "coverpage",
-               :href       => "cover.xhtml",
-               :media_type => "application/xhtml+xml" }
-
-      navpoint = { :src => "cover.xhtml",
-                   :play_order => 0,
-                   :id => "coverpage",
-                   :text => "Cover" }
-
-      @book.navmap << navpoint
-      @book.manifest << item
+      @book.manifest << ItemTag.new("coverpage", "cover.xhtml", "application/xhtml+xml")
+      @book.navmap << NavPoint.new("coverpage", 0, "cover.xhtml", "Cover")
     end
 
     def build_chapters
       Dir.chdir(output_path + "OEBPS/") do
         chapters.each_with_index do |c, index|
           File.open("#{c.title.slugify}.xhtml", "w") { |f| f.puts c.format_for_epub }
-          item = c.generate_item_tag
+
+          item     = c.generate_item_tag
           navpoint = c.generate_navpoint
-          navpoint[:play_order] = index + 2    # start after cover, toc
-          navpoint[:id] = "np_#{index}"
+
+          navpoint.play_order = index + 2 # start after cover, toc
+          navpoint.id = "np_#{index}"
+
           @book.navmap << navpoint
           @book.manifest << item
         end
@@ -135,44 +137,18 @@ module Book
       Dir.chdir(output_path + "OEBPS/assets/stylesheets") do
         File.open("epub.css", "w") { |f| f.puts template }
       end
-
-      item = {
-        :id         => "epub.css",
-        :href       => "assets/stylesheets/epub.css",
-        :media_type => "text/css"
-      }
-
-      @book.manifest << item
+      @book.manifest << ItemTag.new("epub.css", "assets/stylesheets/epub.css", "text/css")
     end
 
     def build_toc_ncx
       build_page_from_template("toc.ncx")
-
-      item = {
-        :id         => "toc.ncx",
-        :href       => "toc.ncx",
-        :media_type => "application/x-dtbncx+xml"
-      }
-
-      @book.manifest << item
+      @book.manifest << ItemTag.new("toc.ncx", "toc.ncx", "application/x-dtbncx+xml")
     end
 
     def build_toc_nav
       build_page_from_template("toc.xhtml")
-
-      item = { :id         => "toc",
-               :href       => "toc.xhtml",
-               :media_type => "application/xhtml+xml",
-               :properties => "nav" }
-
-      navpoint = { :src => "toc.xhtml",
-                   :play_order => 1,
-                   :id => "toc",
-                   :text => "Contents" }
-
-      @book.navmap << navpoint
-      @book.manifest << item
+      @book.manifest << ItemTag.new("toc", "toc.xhtml", "application/xhtml+xml", "nav")
+      @book.navmap << NavPoint.new("toc", 1, "toc.xhtml", "Contents")
     end
-
   end
 end

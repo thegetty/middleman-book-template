@@ -2,10 +2,13 @@ module Book
   class Chapter < Middleman::Sitemap::Resource
     attr_reader :book
 
+    ItemTag  = Struct.new :id, :href, :media_type, :properties
+    NavPoint = Struct.new :id, :play_order, :src, :text
+
     # Pass in a reference to the parent Book extension for later use
     def initialize(store, path, source, book)
       super(store, path, source)
-      @book   = book
+      @book = book
     end
 
     def title
@@ -34,21 +37,12 @@ module Book
 
     # Generate a navpoint tag for epub toc.ncx navmap
     def generate_navpoint
-      {
-        :src        => "#{title.slugify}.xhtml",
-        :play_order => nil,
-        :id         => nil,
-        :text       => title
-      }
+      NavPoint.new(nil, nil, "#{title.slugify}.xhtml", title)
     end
 
     # Generate an item tag for epub manifest
     def generate_item_tag
-      {
-        :href       => "#{title.slugify}.xhtml",
-        :id         => "c#{rank}",
-        :media_type => "application/xhtml+xml"
-      }
+      ItemTag.new("c#{rank}", "#{title.slugify}.xhtml", "application/xhtml+xml", nil)
     end
 
     # Generate an itemref tag for epub spine

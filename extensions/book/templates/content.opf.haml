@@ -17,20 +17,15 @@
     %meta{:property => "dcterms:modified"}= Time.now.utc.iso8601
   %manifest
     - book.manifest.each do |item|
-      - if item[:id] == "toc"
-        %item{ :id => item[:id],
-              :href => item[:href],
-              "media-type" => item[:media_type],
-              :properties => "nav" }/
-      - elsif item[:properties] == "cover-image"
-        %item{ :id => "cover-img",
-               :href => item[:href],
-               "media-type" => item[:media_type],
-               :properties => "cover-image"}
+      - if item.properties
+        %item{ :id => item.id,
+               :href => item.href,
+               "media-type" => item.media_type,
+               :properties => item.properties }
       - else
-        %item{ :id => item[:id],
-              :href => item[:href],
-              "media-type" => item[:media_type] }/
+        %item{ :id => item.id,
+               :href => item.href,
+               "media-type" => item.media_type }
   %spine{:toc => "toc.ncx"}
     - if book.cover
       %itemref{:idref => "coverpage"}/

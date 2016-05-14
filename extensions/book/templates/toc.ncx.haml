@@ -7,8 +7,8 @@
   %docTitle
     %text= book.info.title.main
   %navMap
-    - book.navmap.each do |item|
-      %navPoint{ :id => item[:id], "playOrder" => item[:play_order] }
+    - book.navmap.each do |navpoint|
+      %navPoint{ :id => navpoint.id, "playOrder" => navpoint.play_order }
         %navLabel
-          %text= item[:text]
-        %content{:src => item[:src] }
+          %text= navpoint.text
+        %content{:src => navpoint.src }
