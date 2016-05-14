@@ -7,6 +7,7 @@ module Book
   class BookExtension < Middleman::Extension
     self.defined_helpers = [Book::Helpers]
 
+    option :cover, false, "Name of an optional cover image"
     option :pdf_output_path, "dist/book.pdf", "Where to write generated PDF"
     option :epub_output_path, "dist/epub/", "Where to write generated EPUB files"
     option :prince_cli_flags, "--no-artificial-fonts", "Flags for Prince cli"
@@ -14,17 +15,18 @@ module Book
     expose_to_template :chapters, :title, :author
     expose_to_application :chapters
 
-    attr_reader :chapters, :title, :author, :info
-    attr_accessor :manifest
+    attr_reader :chapters, :title, :author, :info, :cover
+    attr_accessor :manifest, :navmap
 
     def initialize(app, options_hash = {}, &block)
       super
       @info     = @app.data.book
       @title    = info.title.main
       @author   = info.author_as_it_appears
+      @cover    = options.cover
       @chapters = []
       @manifest = []
-      @modified = Time.now
+      @navmap   = []
 
       app.after_build do |builder|
         book = app.extensions[:book]
@@ -39,8 +41,11 @@ module Book
     end
 
     def generate_epub
+      # TODO: get rid of hard-coded file names, control via options
+      FileUtils.rm("dist/book.epub") if File.exist?("dist/book.epub")
       epub = Epub.new(self, chapters, options.epub_output_path)
       epub.build(app.sitemap)
+      puts `epzip #{options.epub_output_path} dist/book.epub`
     end
 
     def generate_pdf

@@ -19,10 +19,13 @@ module Book
     def build(sitemap)
       build_epub_dir
       copy_images(sitemap)
-      build_mimetype
       build_container
+      build_cover_page
+      build_toc_nav
       build_chapters
-      build_opf
+      build_epub_css
+      build_toc_ncx
+      build_page_from_template("content.opf")
     end
 
     # Load a template from the book/templates directory
@@ -55,6 +58,7 @@ module Book
 
     # Copy image resources from the Middleman sitemap into the epub package
     # and add their information to the parent Book object's @manifest
+    # TODO: streamline this method, it's too complex
     def copy_images(sitemap)
       resources = sitemap.resources
       images = resources.select { |r| r.path.match("assets/images/*") }
@@ -62,23 +66,30 @@ module Book
 
       Dir.chdir(output_path + "OEBPS/assets/images") do
         images.each_with_index do |image, index|
-          item = { :href => image.file_descriptor.relative_path.basename,
+          filename = image.file_descriptor.relative_path.basename
+          item = { :href => image.file_descriptor.relative_path,
                    :id => "img_#{index}",
                    :media_type => image.content_type }
-          File.open(item[:href], "w") { |f| f.puts image.render }
+
+          if image.file_descriptor.relative_path.basename.to_s == book.cover
+            item[:properties] = "cover-image"
+          end
+
+          File.open(filename, "w") { |f| f.puts image.render }
           @book.manifest << item
         end
       end
     end
 
-    # Various Build Methods
-    # These methods write one or more files at a specific location
-
-    def build_mimetype
-      Dir.chdir(output_path) do
-        File.open("mimetype", "w") { |f| f.puts "application/epub+zip" }
+    def build_page_from_template(filename)
+      template = load_template("#{filename}.haml")
+      Dir.chdir(output_path + "OEBPS/") do
+        File.open(filename, "w") { |f| f.puts template.render(Object.new, :book => book) }
       end
     end
+
+    # Various Build Methods
+    # These methods write one or more files at a specific location
 
     def build_container
       template = load_template("container.xml.haml")
@@ -87,27 +98,81 @@ module Book
       end
     end
 
+    def build_cover_page
+      return false unless book.cover
+      build_page_from_template("cover.xhtml")
+
+      item = { :id => "coverpage",
+               :href       => "cover.xhtml",
+               :media_type => "application/xhtml+xml" }
+
+      navpoint = { :src => "cover.xhtml",
+                   :play_order => 0,
+                   :id => "coverpage",
+                   :text => "Cover" }
+
+      @book.navmap << navpoint
+      @book.manifest << item
+    end
+
     def build_chapters
       Dir.chdir(output_path + "OEBPS/") do
-        chapters.each do |c|
-          File.open("#{c.title.slugify}.html", "w") { |f| f.puts c.format_for_epub }
+        chapters.each_with_index do |c, index|
+          File.open("#{c.title.slugify}.xhtml", "w") { |f| f.puts c.format_for_epub }
+          item = c.generate_item_tag
+          navpoint = c.generate_navpoint
+          navpoint[:play_order] = index + 2    # start after cover, toc
+          navpoint[:id] = "np_#{index}"
+          @book.navmap << navpoint
+          @book.manifest << item
         end
       end
     end
 
+    def build_epub_css
+      # TODO: Allow custom user css to be appended to this file
+      template = File.read("extensions/book/templates/epub.css")
+      Dir.chdir(output_path + "OEBPS/assets/stylesheets") do
+        File.open("epub.css", "w") { |f| f.puts template }
+      end
+
+      item = {
+        :id         => "epub.css",
+        :href       => "assets/stylesheets/epub.css",
+        :media_type => "text/css"
+      }
+
+      @book.manifest << item
+    end
+
     def build_toc_ncx
-      # TODO: Build the TOC NCX file from a HAML template
+      build_page_from_template("toc.ncx")
+
+      item = {
+        :id         => "toc.ncx",
+        :href       => "toc.ncx",
+        :media_type => "application/x-dtbncx+xml"
+      }
+
+      @book.manifest << item
     end
 
     def build_toc_nav
-      # TODO: Build the TOC nav file from a HAML template
+      build_page_from_template("toc.xhtml")
+
+      item = { :id         => "toc",
+               :href       => "toc.xhtml",
+               :media_type => "application/xhtml+xml",
+               :properties => "nav" }
+
+      navpoint = { :src => "toc.xhtml",
+                   :play_order => 1,
+                   :id => "toc",
+                   :text => "Contents" }
+
+      @book.navmap << navpoint
+      @book.manifest << item
     end
 
-    def build_opf
-      template = load_template("content.opf.haml")
-      Dir.chdir(output_path + "OEBPS/") do
-        File.open("content.opf", "w") { |f| f.puts template.render(Object.new, :book => book) }
-      end
-    end
   end
 end

@@ -1,0 +1,20 @@
+!!! XML
+%html{:xmlns => "http://www.w3.org/1999/xhtml", "xmlns:epub" => "http://www.idpf.org/2007/ops"}
+  %head
+    %title Contents
+    %link{:href => "assets/stylesheets/epub.css", :rel => "stylesheet"}/
+  %body
+    %h1 Table of Contents
+    %nav{ "data-type" => "toc",
+          "epub:type" => "toc",
+           :id => "toc" }
+      %ol
+        - if book.cover
+          %li
+            %a{:href => "cover.xhtml"} Cover
+        %li
+          %a{:href => "toc.xhtml"} Contents
+        - book.chapters.each do |chapter|
+          %li
+            %a{:href => "#{chapter.title.slugify}.xhtml"}= chapter.title
+

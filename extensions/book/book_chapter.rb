@@ -32,6 +32,30 @@ module Book
       @book.chapters.select { |p| p.rank < rank }.max_by(&:rank)
     end
 
+    # Generate a navpoint tag for epub toc.ncx navmap
+    def generate_navpoint
+      {
+        :src        => "#{title.slugify}.xhtml",
+        :play_order => nil,
+        :id         => nil,
+        :text       => title
+      }
+    end
+
+    # Generate an item tag for epub manifest
+    def generate_item_tag
+      {
+        :href       => "#{title.slugify}.xhtml",
+        :id         => "c#{rank}",
+        :media_type => "application/xhtml+xml"
+      }
+    end
+
+    # Generate an itemref tag for epub spine
+    def idref
+      "c#{rank}"
+    end
+
     def format_for_epub
       doc = Nokogiri::XML((render :layout => "epub_chapter"))
 
