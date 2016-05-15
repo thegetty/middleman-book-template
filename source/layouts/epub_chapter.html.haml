@@ -4,6 +4,6 @@
     %title= current_page.data.title
     = tag :link, :href => "assets/stylesheets/epub.css", :rel => "stylesheet"
   %body
-    %article
-      %h1= current_page.data.title
+    %h2.chapter-title= current_page.data.title
+    .chapter-body
       = yield

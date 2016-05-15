@@ -28,12 +28,14 @@ module Book
     def build(sitemap)
       build_epub_dir
       copy_images(sitemap)
+      copy_fonts
       build_container
       build_cover_page
       build_toc_nav
       build_chapters
       build_epub_css
       build_toc_ncx
+      build_page_from_template("com.apple.ibooks.display-options.xml", "META-INF/")
       build_page_from_template("content.opf")
     end
 
@@ -45,6 +47,13 @@ module Book
     end
 
     private
+
+    def build_page_from_template(filename, dir = "OEBPS/")
+      template = load_template("#{filename}.haml")
+      Dir.chdir(output_path + dir ) do
+        File.open(filename, "w") { |f| f.puts template.render(Object.new, :book => book) }
+      end
+    end
 
     def clean_directory(dirname)
       valid_start_chars = /[A-z]/
@@ -90,10 +99,12 @@ module Book
       end
     end
 
-    def build_page_from_template(filename)
-      template = load_template("#{filename}.haml")
-      Dir.chdir(output_path + "OEBPS/") do
-        File.open(filename, "w") { |f| f.puts template.render(Object.new, :book => book) }
+    def copy_fonts
+      fonts = Dir.glob("extensions/book/fonts/*.otf")
+      fonts.each do |font|
+        path = Pathname.new(font)
+        FileUtils.cp("#{path}", "#{output_path}/OEBPS/assets/fonts/#{path.basename}")
+        @book.manifest << ItemTag.new("#{path.basename}", "assets/fonts/#{path.basename}", "application/x-font-otf" )
       end
     end
 
