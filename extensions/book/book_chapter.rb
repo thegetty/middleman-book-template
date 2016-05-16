@@ -1,9 +1,9 @@
+require_relative "./xml_structs.rb"
+
 module Book
   class Chapter < Middleman::Sitemap::Resource
+    include XMLStructs
     attr_reader :book
-
-    ItemTag  = Struct.new :id, :href, :media_type, :properties
-    NavPoint = Struct.new :id, :play_order, :src, :text
 
     # Pass in a reference to the parent Book extension for later use
     def initialize(store, path, source, book)

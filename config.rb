@@ -3,7 +3,10 @@ require "extensions/book"
 activate :sprockets
 activate :directory_indexes
 activate :autoprefixer
-activate :book, :cover => "cover.jpg"
+
+activate :book do |b|
+  b.ebook_cover = "cover.jpg"
+end
 
 set :relative_links, true
 set :css_dir, "assets/stylesheets"

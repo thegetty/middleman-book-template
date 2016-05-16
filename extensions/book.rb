@@ -1,13 +1,14 @@
 require_relative "book/helpers.rb"
 require_relative "book/book_chapter.rb"
 require_relative "book/epub.rb"
-require "time"
 
 module Book
   class BookExtension < Middleman::Extension
     self.defined_helpers = [Book::Helpers]
 
-    option :cover, false, "Name of an optional cover image"
+    option :ebook_cover, false, "Name of an optional cover image"
+    option :output_filename, "book", "Filename of resulting .pdf, .epub, etc"
+    option :output_dir, "dist", "Directory to output PDF and EPUB files"
     option :pdf_output_path, "dist/book.pdf", "Where to write generated PDF"
     option :epub_output_path, "dist/epub/", "Where to write generated EPUB files"
     option :prince_cli_flags, "--no-artificial-fonts", "Flags for Prince cli"
@@ -23,15 +24,15 @@ module Book
       @info     = @app.data.book
       @title    = info.title.main
       @author   = info.author_as_it_appears
-      @cover    = options.cover
+      @cover    = options.ebook_cover
       @chapters = []
       @manifest = []
       @navmap   = []
 
       app.after_build do |builder|
         book = app.extensions[:book]
-        book.generate_pdf if environment? :pdf
-        book.generate_epub if environment? :epub
+        book.generate_pdf! if environment? :pdf
+        book.generate_epub! if environment? :epub
       end
     end
 
@@ -40,20 +41,26 @@ module Book
       resources
     end
 
-    def generate_epub
-      # TODO: get rid of hard-coded file names, control via options
-      FileUtils.rm("dist/book.epub") if File.exist?("dist/book.epub")
-      epub = Epub.new(self, chapters, options.epub_output_path)
+    def generate_epub!
+      epub_file   = File.join(options.output_dir, "#{options.output_filename}.epub")
+      working_dir = File.join(options.output_dir, "epub")
+
+      FileUtils.rm(epub_file) if File.exist?(epub_file)
+      epub = Epub.new(self, chapters, working_dir)
       epub.build(app.sitemap)
-      puts `epzip #{options.epub_output_path} dist/book.epub`
+
+      puts `epzip #{working_dir} #{epub_file}`
     end
 
-    def generate_pdf
+    def generate_pdf!
+      pdf_file = "#{options.output_dir}/#{options.output_filename}.pdf"
       pagelist = generate_pagelist
-      output   = options.pdf_output_path
       flags    = options.prince_cli_flags
-      puts `prince #{pagelist} -o #{output} #{flags}`
+
+      puts `prince #{pagelist} -o #{pdf_file} #{flags}`
     end
+
+    private
 
     def generate_pagelist
       arg_string  = ""
@@ -62,12 +69,8 @@ module Book
       arg_string
     end
 
-    private
-
     def generate_chapters!(resources)
-      contents = resources.find_all { |p| p.data.sort_order }
-      contents.sort_by { |p| p.data.sort_order }
-      contents.each do |p|
+      resources.find_all { |p| p.data.sort_order }.each do |p|
         source, path, metadata = p.source_file, p.destination_path, p.metadata
         chapter = Book::Chapter.new(@app.sitemap, path, source, self)
         chapter.add_metadata(metadata)
