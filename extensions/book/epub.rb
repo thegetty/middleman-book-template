@@ -46,8 +46,7 @@ module Book
     end
 
     def copy_images(sitemap)
-      resources = sitemap.resources
-      images = resources.select { |r| r.path.match("assets/images/*") }
+      images = sitemap.resources.select { |r| r.path.match("assets/images/*") }
       images.reject! { |r| r.path.to_s == "assets/images/.keep" }
 
       Dir.chdir(working_dir + "/OEBPS/assets/images") do
@@ -109,7 +108,7 @@ module Book
     def build_epub_css
       # TODO: Allow custom user css to be appended to this file
       template = File.read("extensions/book/templates/epub.css")
-      Dir.chdir(working_dir + "/OEBPS/assets/stylesheets") do
+      Dir.chdir(File.join(working_dir, "/OEBPS/assets/stylesheets")) do
         File.open("epub.css", "w") { |f| f.puts template }
       end
       @book.manifest << ItemTag.new("epub.css", "assets/stylesheets/epub.css", "text/css")
