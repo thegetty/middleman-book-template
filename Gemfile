@@ -17,3 +17,5 @@ gem "neat", "~> 1.7"
 gem "sassc", "~> 1.8"
 gem "slugify"
 gem "epzip"
+
+gem "canto", path: "../canto"

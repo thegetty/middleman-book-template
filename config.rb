@@ -1,10 +1,10 @@
-require "extensions/book"
+# require "extensions/book"
 
 activate :sprockets
 activate :directory_indexes
 activate :autoprefixer
 
-activate :book do |b|
+activate :canto do |b|
   b.ebook_cover = "cover.jpg"
 end
 
