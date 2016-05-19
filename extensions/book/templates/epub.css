@@ -1,0 +1,85 @@
+@font-face {
+  font-family: "Merriweather";
+  src: url("../fonts/merriweather-regular.otf");
+  font-weight: 400;
+}
+
+@font-face {
+  font-family: "Merriweather";
+  src: url("../fonts/merriweather-bold.otf");
+  font-weight: 700;
+}
+
+@font-face {
+  font-family: "Merriweather";
+  src: url("../fonts/merriweather-italic.otf");
+  font-style: italic;
+  font-weight: 400;
+}
+
+@font-face {
+  font-family: "SourceSans";
+  src: url("../fonts/sourcesanspro-regular.otf");
+  font-weight: 400;
+}
+
+@font-face {
+  font-family: "SourceSans";
+  src: url("../fonts/sourcesanspro-italic.otf");
+  font-style: italic;
+  font-weight: 400;
+}
+
+@font-face {
+  font-family: "SourceSans";
+  src: url("../fonts/sourcesanspro-bold.otf");
+  font-weight: 700;
+}
+
+body {
+  font-family: "Merriweather", serif;
+  font-size: 14px;
+	line-height: 1.5;
+}
+
+p {
+	text-indent: 0;
+	margin: 0;
+  orphans: 2;
+  widows: 2;
+  -epub-hyphens: none;
+}
+
+p + p {
+	text-indent: 2em;
+}
+
+h1, h2, h3, h4, h5, h6 {
+  font-family: "SourceSans";
+  font-weight: bold;
+  -epub-hyphens: none;
+}
+
+h1 {
+	font-size: 2em;
+}
+
+h2 {
+	font-size: 1.5em;
+}
+
+blockquote {
+  font-style: italic;
+}
+
+blockquote em {
+  font-style: normal;
+}
+
+img {
+	max-width: 100%;
+}
+
+.chapter-title {
+  margin-bottom: 4em;
+}

@@ -1,0 +1,14 @@
+!!! XML
+%ncx{ :xmlns     => "http://www.daisy.org/z3986/2005/ncx/",
+      :version   => "2005-1",
+      "xml:lang" => "en" }
+  %head
+    %meta{:name => "dtb:uid", :content => book.info.pub_id }
+  %docTitle
+    %text= book.info.title.main
+  %navMap
+    - book.navmap.each do |navpoint|
+      %navPoint{ :id => navpoint.id, "playOrder" => navpoint.play_order }
+        %navLabel
+          %text= navpoint.text
+        %content{:src => navpoint.src }

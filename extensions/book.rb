@@ -1,64 +1,67 @@
 require_relative "book/helpers.rb"
 require_relative "book/book_chapter.rb"
+require_relative "book/epub.rb"
 
 module Book
   class BookExtension < Middleman::Extension
     self.defined_helpers = [Book::Helpers]
+
+    option :ebook_cover, false, "Name of an optional cover image"
+    option :output_filename, "book", "Filename of resulting .pdf, .epub, etc"
+    option :output_dir, "dist", "Directory to output PDF and EPUB files"
     option :pdf_output_path, "dist/book.pdf", "Where to write generated PDF"
-    option :prince_cli_flags, "--no-artificial-fonts", "Command-line flags for Prince PDF utility"
+    option :epub_output_path, "dist/epub/", "Where to write generated EPUB files"
+    option :prince_cli_flags, "--no-artificial-fonts", "Flags for Prince cli"
+
     expose_to_template :chapters, :title, :author
+    expose_to_application :chapters
 
-    # @return [Array<Middleman::Sitemap::Resource>] an array of resource objects
-    # which have been extended with the methods in the BookChapter module.
-    attr_reader :chapters
-
-    # @return [Middleman::Util::EnhancedHash] with the contents of the book.yml data file
-    attr_reader :info
+    attr_reader :chapters, :title, :author, :info, :cover
+    attr_accessor :manifest, :navmap
 
     def initialize(app, options_hash = {}, &block)
       super
       @info     = @app.data.book
+      @title    = info.title.main
+      @author   = info.author_as_it_appears
+      @cover    = options.ebook_cover
       @chapters = []
+      @manifest = []
+      @navmap   = []
 
-      # PDF Generation via Prince CLI
       app.after_build do |builder|
         book = app.extensions[:book]
-        book.generate_pdf if environment? :pdf
+        book.generate_pdf! if environment? :pdf
+        book.generate_epub! if environment? :epub
       end
     end
 
-    # Manipulator method
-    # @return [Array<Middleman::Sitemap::Resource>] an array of resource objects
     def manipulate_resource_list(resources)
       generate_chapters!(resources)
       resources
     end
 
-    # This method should read author info from the book.yml data file and
-    # return a properly-formated FirstName Lastname author string.
-    # @return [String]
-    def author
-      info.author_as_it_appears
+    def generate_epub!
+      epub_file   = File.join(options.output_dir, "#{options.output_filename}.epub")
+      working_dir = File.join(options.output_dir, "epub")
+
+      FileUtils.rm(epub_file) if File.exist?(epub_file)
+      epub = Epub.new(self, chapters, working_dir)
+      epub.build(app.sitemap)
+
+      puts `epzip #{working_dir} #{epub_file}`
     end
 
-    # This method should read title info from the book.yml data file and
-    # return a properly-formated string with the book's title
-    # @return [String]
-    def title
-      info.title.main
-    end
-
-    # Calls the Prince CLI utility with args based on extension options
-    # @return +nil+
-    def generate_pdf
+    def generate_pdf!
+      pdf_file = "#{options.output_dir}/#{options.output_filename}.pdf"
       pagelist = generate_pagelist
-      output   = options.pdf_output_path
       flags    = options.prince_cli_flags
-      puts `prince #{pagelist} -o #{output} #{flags}`
+
+      puts `prince #{pagelist} -o #{pdf_file} #{flags}`
     end
 
-    # Generate a list of files to pass to the Prince CLI
-    # @return [String]
+    private
+
     def generate_pagelist
       arg_string  = ""
       baseurl     = @app.config.build_dir + "/"
@@ -66,29 +69,17 @@ module Book
       arg_string
     end
 
-    private
-    # This method is meant to be called inside the manipulate_resource_list method
-    # It modifies the resource list and returns nothing
-    # By swapping out certain resource objects with a custom Chapter class that inherits
-    # from Middleman::Sitemap::Resource, we can add custom methods for chapter-specific features
-    # @return +nil+
     def generate_chapters!(resources)
-      contents = resources.find_all { |p| p.data.sort_order }
-      contents.sort_by { |p| p.data.sort_order }
-      contents.each do |p|
+      resources.find_all { |p| p.data.sort_order }.each do |p|
         source, path, metadata = p.source_file, p.destination_path, p.metadata
         chapter = Book::Chapter.new(@app.sitemap, path, source, self)
-
-        # Make sure to explicitly add metadata or else things will break
         chapter.add_metadata(metadata)
-
         resources.delete p
         resources.push chapter
         @chapters.push chapter
       end
 
       # Keep chapters from duplicating themselves endlessly on each livereload
-      # TODO: find out what causes this behavior and remove this workaround
       @chapters.uniq! { |p| p.data.sort_order }
       @chapters.sort_by! { |p| p.data.sort_order }
     end

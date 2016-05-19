@@ -1,0 +1,7 @@
+!!! XML
+%html{:xmlns => "http://www.w3.org/1999/xhtml", "xmlns:epub" => "http://www.idpf.org/2007/ops"}
+  %head
+    %title= book.title
+    %link{:href => "assets/stylesheets/epub.css", :rel => "stylesheet"}/
+  %body.cover-page
+    %img.cover-image{:src => "assets/images/#{book.cover}"}
