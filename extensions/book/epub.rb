@@ -35,6 +35,7 @@ module Book
     private
 
     def build_epub_dir
+      clean_directory(working_dir)
       oebps_subdirs = %w(assets assets/images assets/stylesheets assets/fonts)
       Dir.chdir(working_dir) do
         FileUtils.rm_rf(".")
