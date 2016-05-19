@@ -57,6 +57,7 @@ module Book
       images = doc.css("img")
       images.each do |image|
         image["src"] = image["src"][1..-1] if image["src"].start_with? "/"
+        image["src"] = image["src"][3..-1] if image["src"].start_with? "../"
       end
 
       doc.to_xml
