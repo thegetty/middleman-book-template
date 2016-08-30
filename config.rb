@@ -1,8 +1,9 @@
-require "extensions/book"
-
 activate :directory_indexes
 activate :autoprefixer
-activate :book
+
+activate :canto do |b|
+  b.ebook_cover = "cover.jpg"
+end
 
 set :relative_links, true
 set :css_dir, "assets/stylesheets"
@@ -27,3 +28,4 @@ activate :deploy do |deploy|
   deploy.build_before = true
   deploy.deploy_method = :git
 end
+

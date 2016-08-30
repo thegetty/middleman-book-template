@@ -3,10 +3,11 @@ title:
   main: Getty Publication Template
   short: Pub Template
 pub_date: 2016-05-05
-creator:
-  name: J. Paul Getty
-  role: aut
-  file_as: Getty, J. Paul
+creators:
+  - first_name: J. Paul
+    last_name: Getty
+    role: aut
+    file_as: Getty, J. Paul
 contributors:
   - name: Eric Gardner
     role: aut
