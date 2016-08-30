@@ -10,7 +10,8 @@
   %body{class: page_classes}
     %main#main
       = partial "partials/nav"
-      = yield
+      .sceneElement{data: {viewport: current_page.data.sort_order }}
+        = yield
       .sliding-panel-fade-screen
     = javascript_include_tag "https://code.jquery.com/jquery-2.1.1.min.js"
     = javascript_include_tag "application"

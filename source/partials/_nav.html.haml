@@ -2,16 +2,16 @@
   .navbar-left
   .navbar-center
     - if prev_chapter_path
-      = link_to prev_chapter_path, { :id => "prev-link" } do
+      = link_to prev_chapter_path, { :id => "prev-link", :data => { :target => current_page.data.sort_order - 1 }} do
         %i.navbar-prev-link
     .navbar-center-info
-      = link_to data.book.title.short, "/index.html", { :class => "navbar-site-title"}
+      = link_to data.book.title.short, "/index.html", { :class => "navbar-site-title", :data => { :target => "0" }}
       - unless current_page.data.sort_order == 0
         %i.navbar-breadcrumb
         %span.navbar-page-title
           = current_page.data.title
     - if next_chapter_path
-      = link_to next_chapter_path, { :id => "next-link" } do
+      = link_to next_chapter_path, { :id => "next-link", :data => { :target => current_page.data.sort_order + 1 }} do
         %i.navbar-next-link
   .navbar-right
     %a#navbar-menu{:href => "javascript:void(0);"}
